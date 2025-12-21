@@ -1,7 +1,12 @@
 import './thumbnails.js';
 import './form.js';
 import './photo-editing.js';
-import { initPictures} from './thumbnails.js';
+import { loadPictures} from './thumbnails.js';
+import './filters.js';
 
-initPictures();
 
+const filterElement = document.querySelector('.img-filters');
+
+loadPictures().then(() => {
+  filterElement.classList.remove('img-filters--inactive');
+});

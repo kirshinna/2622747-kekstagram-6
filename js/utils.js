@@ -28,7 +28,7 @@ const showMessage = ({ templateId, elementClass, buttonClass }) => {
     document.removeEventListener('keydown', onEsc);
   };
 
-  onEsc = (evt) => {
+  onEsc = function(evt) {
     if (isEscapeKey(evt)) {
       close();
     }
@@ -43,6 +43,40 @@ const showMessage = ({ templateId, elementClass, buttonClass }) => {
   });
 
   document.addEventListener('keydown', onEsc);
+};
+
+const openModal = (modalElement, onClose) => {
+  modalElement.classList.remove('hidden');
+  document.body.classList.add('modal-open');
+
+  const onEsc = (evt) => {
+    if (isEscapeKey(evt)) {
+      closeModal();
+    }
+  };
+
+  const onClickOutside = (evt) => {
+    if (evt.target === modalElement) {
+      closeModal();
+    }
+  };
+
+  function closeModal() {
+    modalElement.classList.add('hidden');
+    document.body.classList.remove('modal-open');
+
+    modalElement.removeEventListener('click', onClickOutside);
+    document.removeEventListener('keydown', onEsc);
+
+    if (onClose) {
+      onClose();
+    }
+  }
+
+  modalElement.addEventListener('click', onClickOutside);
+  document.addEventListener('keydown', onEsc);
+
+  return closeModal;
 };
 
 const showAlert = (message) => {
@@ -71,6 +105,6 @@ function debounce (callback, timeoutDelay = DEBOUNCE_DELAY) {
   };
 }
 
-export{getRandomInteger, getRandomArrayElement, showAlert, debounce, showMessage, isEscapeKey};
+export{getRandomInteger, getRandomArrayElement, showAlert, debounce, showMessage, openModal};
 
 

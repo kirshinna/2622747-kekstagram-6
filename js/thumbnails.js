@@ -30,15 +30,44 @@ const renderPictures = (photos) => {
   picturesContainerElement.append(fragment);
 };
 
-const initPictures = () => {
-  getData()
-    .then((photos) => {
-      renderPictures(photos);
-    })
-    .catch(
-      (error) => {
-        showAlert(error.message);
-      });
+let photosList = [];
+
+const getFilteredPhotos = (filter) => {
+  switch (filter) {
+    case 'random':
+      return [...photosList]
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 10);
+
+    case 'discussed':
+      return [...photosList]
+        .sort((a, b) => b.comments.length - a.comments.length);
+
+    default:
+      return photosList;
+  }
 };
 
-export {initPictures, renderPictures};
+const clearPictures = () => {
+  picturesContainerElement
+    .querySelectorAll('.picture')
+    .forEach((el) => el.remove());
+};
+
+const initPictures = (filter = 'default') => {
+  clearPictures();
+  renderPictures(getFilteredPhotos(filter));
+};
+
+const loadPictures = () =>
+  getData()
+    .then((loadedPhotos) => {
+      photosList = loadedPhotos;
+      initPictures();
+    })
+    .catch((error) => {
+      showAlert(error.message);
+    });
+
+export { initPictures, loadPictures };
+

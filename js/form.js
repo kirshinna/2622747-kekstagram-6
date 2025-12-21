@@ -1,6 +1,7 @@
 import { resetDesign } from './photo-editing.js';
 import { sendData } from './api.js';
 import { pristine } from './form-validation.js';
+import { showMessage } from './utils.js';
 
 const uploadInputElement = document.querySelector('#upload-file');
 const overlayElement = document.querySelector('.img-upload__overlay');
@@ -38,6 +39,11 @@ uploadInputElement.addEventListener('change', () => {
 });
 
 closeButtonElement.addEventListener('click', closeForm);
+overlayElement.addEventListener('click', (evt) => {
+  if (evt.target === overlayElement) {
+    closeForm();
+  }
+});
 
 function onEscPress(evt) {
   if (evt.key === 'Escape') {
@@ -52,56 +58,19 @@ function onEscPress(evt) {
 }
 
 const showSuccessMessage = () => {
-  const successElement = document.querySelector('#success').content.cloneNode(true).querySelector('.success');
-
-  document.body.append(successElement);
-
-  const onEsc = (evt) => {
-    if (evt.key === 'Escape') {
-      close();
-    }
-  };
-
-  const close = () => {
-    successElement.remove();
-    document.removeEventListener('keydown', onEsc);
-  };
-
-  successElement.querySelector('.success__button').addEventListener('click', close);
-  successElement.addEventListener('click', (evt) => {
-    if (evt.target === successElement) {
-      close();
-    }
+  showMessage({
+    templateId: '#success',
+    elementClass: '.success',
+    buttonClass: '.success__button',
   });
-
-  document.addEventListener('keydown', onEsc);
 };
 
-
 const showErrorMessage = () => {
-  const errorElement = document.querySelector('#error').content.cloneNode(true).querySelector('.error');
-
-  document.body.append(errorElement);
-
-  const close = () => {
-    errorElement.remove();
-    document.removeEventListener('keydown', onEsc);
-  };
-
-  const onEsc = (evt) => {
-    if (evt.key === 'Escape') {
-      close();
-    }
-  };
-
-  errorElement.querySelector('.error__button').addEventListener('click', close);
-  errorElement.addEventListener('click', (evt) => {
-    if (evt.target === errorElement) {
-      close();
-    }
+  showMessage({
+    templateId: '#error',
+    elementClass: '.error',
+    buttonClass: '.error__button',
   });
-
-  document.addEventListener('keydown', onEsc);
 };
 
 formElement.addEventListener('submit', (evt) => {

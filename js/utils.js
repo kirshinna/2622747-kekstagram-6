@@ -1,3 +1,5 @@
+const DEBOUNCE_DELAY = 500;
+
 const getRandomInteger = (a, b) => {
   const lower = Math.ceil(Math.min(a, b));
   const upper = Math.floor(Math.max(a, b));
@@ -6,6 +8,42 @@ const getRandomInteger = (a, b) => {
 };
 
 const getRandomArrayElement = (elements) => elements[getRandomInteger(0, elements.length - 1)];
+
+const isEscapeKey = (evt) => evt.key === 'Escape';
+
+const showMessage = ({ templateId, elementClass, buttonClass }) => {
+  const element = document
+    .querySelector(templateId)
+    .content
+    .cloneNode(true)
+    .querySelector(elementClass);
+
+  document.body.append(element);
+
+  // eslint-disable-next-line prefer-const
+  let onEsc;
+
+  const close = () => {
+    element.remove();
+    document.removeEventListener('keydown', onEsc);
+  };
+
+  onEsc = (evt) => {
+    if (isEscapeKey(evt)) {
+      close();
+    }
+  };
+
+  element.querySelector(buttonClass).addEventListener('click', close);
+
+  element.addEventListener('click', (evt) => {
+    if (evt.target === element) {
+      close();
+    }
+  });
+
+  document.addEventListener('keydown', onEsc);
+};
 
 const showAlert = (message) => {
   const alertContainer = document.createElement('div');
@@ -24,6 +62,15 @@ const showAlert = (message) => {
   document.body.append(alertContainer);
 };
 
-export{getRandomInteger, getRandomArrayElement, showAlert};
+function debounce (callback, timeoutDelay = DEBOUNCE_DELAY) {
+  let timeoutId;
+
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+  };
+}
+
+export{getRandomInteger, getRandomArrayElement, showAlert, debounce, showMessage, isEscapeKey};
 
 

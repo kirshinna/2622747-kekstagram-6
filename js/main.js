@@ -3,6 +3,7 @@ import './form.js';
 import './photo-editing.js';
 import { loadPictures} from './thumbnails.js';
 import './filters.js';
+import './user-photo.js';
 
 
 const filterElement = document.querySelector('.img-filters');

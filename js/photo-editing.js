@@ -70,7 +70,8 @@ const applyEffect = (effectName, value) => {
   } else {
     previewImageElement.style.filter = '';
   }
-  effectLevelValueElement.value = value;
+  const numValue = Number(value);
+  effectLevelValueElement.value = numValue % 1 === 0 ? numValue.toString() : numValue.toFixed(1);
 };
 
 effectsRadioElements.forEach((radio) => {

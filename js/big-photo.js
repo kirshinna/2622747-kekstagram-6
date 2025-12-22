@@ -1,4 +1,4 @@
-import { openModal } from './utils.js';
+import { openModal, isEscapeKey } from './utils.js';
 
 const bigPictureElement = document.querySelector('.big-picture');
 const closeButtonElement = document.querySelector('.big-picture__cancel');
@@ -82,13 +82,23 @@ const openBigPicture = (photo) => {
     resetComments();
   });
 
-  const onCloseButtonClick = () => {
+  const onDocumentKeydown = (evt) => {
+    if (isEscapeKey(evt)) {
+      evt.preventDefault();
+      closeModal();
+    }
+  };
+
+  document.addEventListener('keydown', onDocumentKeydown);
+
+  const extendedCloseModal = () => {
+    document.removeEventListener('keydown', onDocumentKeydown);
     closeModal();
   };
 
-  closeButtonElement.addEventListener('click', onCloseButtonClick);
+  closeButtonElement.addEventListener('click', extendedCloseModal);
 
-  closeButtonElement._closeHandler = onCloseButtonClick;
+  return extendedCloseModal;
 };
 
 export { openBigPicture };

@@ -49,12 +49,6 @@ const openModal = (modalElement, onClose) => {
   modalElement.classList.remove('hidden');
   document.body.classList.add('modal-open');
 
-  const onEsc = (evt) => {
-    if (isEscapeKey(evt)) {
-      closeModal();
-    }
-  };
-
   const onClickOutside = (evt) => {
     if (evt.target === modalElement) {
       closeModal();
@@ -66,7 +60,6 @@ const openModal = (modalElement, onClose) => {
     document.body.classList.remove('modal-open');
 
     modalElement.removeEventListener('click', onClickOutside);
-    document.removeEventListener('keydown', onEsc);
 
     if (onClose) {
       onClose();
@@ -74,7 +67,6 @@ const openModal = (modalElement, onClose) => {
   }
 
   modalElement.addEventListener('click', onClickOutside);
-  document.addEventListener('keydown', onEsc);
 
   return closeModal;
 };
@@ -105,6 +97,6 @@ function debounce (callback, timeoutDelay = DEBOUNCE_DELAY) {
   };
 }
 
-export{getRandomInteger, getRandomArrayElement, showAlert, debounce, showMessage, openModal};
+export{getRandomInteger, getRandomArrayElement, showAlert, debounce, showMessage, openModal, isEscapeKey};
 
 

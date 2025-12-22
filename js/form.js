@@ -32,14 +32,20 @@ const onEscPress = (evt) => {
   }
 };
 
-const closeForm = () => {
+const hideForm = () => {
   overlayElement.classList.add('hidden');
   bodyElement.classList.remove('modal-open');
   document.removeEventListener('keydown', onEscPress);
 };
 
 const openForm = () => {
-  closeFormModal = openModal(overlayElement, closeForm);
+  closeFormModal = openModal(overlayElement, () => {
+    resetForm();
+    hideForm();
+  });
+
+  document.addEventListener('keydown', onEscPress);
+
   closeButtonElement.addEventListener('click', closeFormModal, { once: true });
 };
 
@@ -48,8 +54,6 @@ uploadInputElement.addEventListener('change', () => {
     openForm();
   }
 });
-
-document.addEventListener('keydown', onEscPress);
 
 const showSuccessMessage = () => {
   showMessage({
@@ -60,8 +64,7 @@ const showSuccessMessage = () => {
 };
 
 const showErrorMessage = () => {
-  overlayElement.classList.add('hidden');
-  bodyElement.classList.remove('modal-open');
+  hideForm();
 
   showMessage({
     templateId: '#error',
@@ -96,7 +99,6 @@ const showErrorMessage = () => {
   }
 
   errorButton.addEventListener('click', returnForm);
-
   document.addEventListener('keydown', onEscError);
   document.addEventListener('click', onClickOutside);
 };
@@ -123,8 +125,7 @@ formElement.addEventListener('submit', (evt) => {
   sendData(new FormData(formElement))
     .then(() => {
       showSuccessMessage();
-      resetForm();
-      closeForm();
+      closeFormModal();
     })
     .catch(() => {
       showErrorMessage();
